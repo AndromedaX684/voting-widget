@@ -5,28 +5,20 @@ import { v } from "convex/values";
 const features = defineTable({
 	title: v.string(),
 	description: v.string(),
-	status: v.union(
-		v.literal("planned"),
-		v.literal("in review"),
-		v.literal("fixed")
-	),
-	priority: v.union(v.literal("low"), v.literal("medium"), v.literal("high")),
-	appId: v.string(), // Which app this feature belongs to
-	createdAt: v.number(),
-	voteCount: v.optional(v.number()),
-}).index("by_appId", ["appId"]);
+});
 
-// Votes table (one vote per user per feature)
 const votes = defineTable({
 	featureId: v.id("features"),
-	userId: v.string(),
+	userId: v.string(), // Use string for cross-app user IDs
 	userInfo: v.optional(
 		v.object({
+			// Store extra user info if needed
 			name: v.optional(v.string()),
 			email: v.optional(v.string()),
+			// Add more fields as needed
 		})
 	),
-	timestamp: v.number(),
+	timestamp: v.number(), // Store as ms since epoch
 }).index("by_feature_user", ["featureId", "userId"]);
 
 // Feature requests (inbox for admin)

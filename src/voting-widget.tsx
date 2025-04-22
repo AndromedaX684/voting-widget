@@ -185,15 +185,7 @@ const VotingWidget: React.FC<VotingWidgetProps> = ({ user }) => {
 			/>
 			{showThankYou && (
 				<div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
-					<Card
-						className="font-bold text-2xl text-center shadow-lg p-12"
-						style={{
-							borderImage:
-								"linear-gradient(90deg, #FFD700, #FFFACD, #FFD700) 1",
-							boxShadow: "0 0 24px 4px #FFD70099",
-							background: "rgba(255,255,255)",
-						}}
-					>
+					<Card className="font-bold text-2xl text-center shadow-lg p-12">
 						<span className="bg-gradient-to-r from-yellow-400 via-yellow-200 to-yellow-400 bg-clip-text text-transparent drop-shadow-lg">
 							Thank you for your request!
 						</span>

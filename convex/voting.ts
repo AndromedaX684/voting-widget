@@ -1,7 +1,48 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
-// Query: Get all features with vote counts and user info
+// --- Submit a vote (one per user per feature) ---
+export const submitVote = mutation({
+	args: {
+		featureId: v.id("features"),
+		userId: v.string(),
+		userInfo: v.optional(
+			v.object({
+				name: v.optional(v.string()),
+				email: v.optional(v.string()),
+			})
+		),
+	},
+	returns: v.object({ success: v.boolean(), message: v.string() }),
+	handler: async (ctx, args) => {
+		// Check for existing vote
+		const existing = await ctx.db
+			.query("votes")
+			.withIndex("by_feature_user", (q) =>
+				q.eq("featureId", args.featureId).eq("userId", args.userId)
+			)
+			.unique();
+		if (existing) {
+			return {
+				success: false,
+				message: "User has already voted for this feature.",
+			};
+		}
+		try {
+			await ctx.db.insert("votes", {
+				featureId: args.featureId,
+				userId: args.userId,
+				userInfo: args.userInfo,
+				timestamp: Date.now(),
+			});
+			return { success: true, message: "Vote submitted." };
+		} catch (err) {
+			return { success: false, message: "Failed to submit vote." };
+		}
+	},
+});
+
+// --- Get voting results ---
 export const getResults = query({
 	args: {},
 	returns: v.array(
@@ -49,46 +90,5 @@ export const getResults = query({
 			});
 		}
 		return results;
-	},
-});
-
-// Mutation: Submit a vote (one per user per feature)
-export const submitVote = mutation({
-	args: {
-		featureId: v.id("features"),
-		userId: v.string(),
-		userInfo: v.optional(
-			v.object({
-				name: v.optional(v.string()),
-				email: v.optional(v.string()),
-			})
-		),
-	},
-	returns: v.object({ success: v.boolean(), message: v.string() }),
-	handler: async (ctx, args) => {
-		// Check for existing vote
-		const existing = await ctx.db
-			.query("votes")
-			.withIndex("by_feature_user", (q) =>
-				q.eq("featureId", args.featureId).eq("userId", args.userId)
-			)
-			.unique();
-		if (existing) {
-			return {
-				success: false,
-				message: "User has already voted for this feature.",
-			};
-		}
-		try {
-			await ctx.db.insert("votes", {
-				featureId: args.featureId,
-				userId: args.userId,
-				userInfo: args.userInfo,
-				timestamp: Date.now(),
-			});
-			return { success: true, message: "Vote submitted." };
-		} catch (err) {
-			return { success: false, message: "Failed to submit vote." };
-		}
 	},
 });

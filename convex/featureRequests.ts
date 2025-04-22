@@ -1,5 +1,20 @@
 import { v } from "convex/values";
-import { mutation } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
+
+// --- Get all features ---
+export const getFeatures = query({
+	args: {},
+	returns: v.array(
+		v.object({
+			_id: v.id("features"),
+			title: v.string(),
+			description: v.string(),
+		})
+	),
+	handler: async (ctx) => {
+		return await ctx.db.query("features").collect();
+	},
+});
 
 // Mutation to submit a new feature request
 export const submitFeatureRequest = mutation({
