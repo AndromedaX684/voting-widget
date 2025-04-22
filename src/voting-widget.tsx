@@ -30,9 +30,7 @@ const VotingWidget: React.FC<VotingWidgetProps> = ({ user }) => {
 	const submitVote = useMutation(api.voting.submitVote);
 	const [loadingVote, setLoadingVote] = useState<string | null>(null);
 	const [error, setError] = useState<string | null>(null);
-	const submitFeatureRequest = useMutation(
-		api.featureRequests.submitFeatureRequest
-	);
+	const submitFeatureRequest = useMutation(api.voting.submitFeatureRequest);
 	const [requestLoading, setRequestLoading] = useState(false);
 	const [requestError, setRequestError] = useState<string | null>(null);
 	const [showThankYou, setShowThankYou] = useState(false);

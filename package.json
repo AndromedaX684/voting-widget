@@ -1,6 +1,6 @@
 {
   "name": "@andromedax684/voting-widget",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "type": "module",
   "main": "src/voting-widget.tsx",
   "types": "src/voting-widget.tsx",

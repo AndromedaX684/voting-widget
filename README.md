@@ -115,3 +115,117 @@ You’re now a package pro! 🚀
 If you want a script to automate this, or want to set up GitHub Actions for auto-publishing, just ask!
 
 ---
+
+Here’s what you need in **any other app** to make your voting/feature request system work with your npm package:
+
+---
+
+## **1. The UI Package**
+
+- Install your npm package (e.g., `@andromedax684/voting-widget`).
+- Install all its peer dependencies (React, Convex, Tailwind, etc. as required).
+
+---
+
+## **2. Convex Backend Files**
+
+You **must** copy these files into the new app’s `convex/` directory:
+
+- **`voting.ts`**
+  Handles voting logic (submitting votes, getting results).
+
+- **`featureRequests.ts`**
+  Handles feature request submission, admin actions, and ticket creation.
+
+- **Any referenced Convex schema:**
+  - Make sure your `convex/schema.ts` includes the tables and indexes for:
+    - `features`
+    - `votes`
+    - `featureRequests`
+    - `featureTickets`
+  - The schema must match the one you used to develop the widget and admin.
+
+---
+
+## **3. Convex Schema**
+
+- Your `convex/schema.ts` must include all the tables and indexes required by `voting.ts` and `featureRequests.ts`.
+- If you miss a table or index, Convex will throw errors.
+
+---
+
+## **4. Convex Auth (if you want user info)**
+
+- If your widget expects user info, you need to have Convex Auth set up and the `users` table in your schema.
+
+---
+
+## **5. Convex Functions Deployment**
+
+- After copying the files, run `npx convex dev` or `npx convex deploy` to push the backend functions.
+
+---
+
+## **6. Frontend Integration**
+
+- Import and use the widget in your React app.
+- Use the Convex React hooks (`useQuery`, `useMutation`) as shown in your VotingPage/AdminPage.
+
+---
+
+## **Summary Table**
+
+| File/Setup                | Required? | Purpose                           |
+| ------------------------- | --------- | --------------------------------- |
+| npm voting widget package | ✅        | UI component                      |
+| voting.ts                 | ✅        | Voting backend logic              |
+| featureRequests.ts        | ✅        | Feature request backend logic     |
+| schema.ts (with tables)   | ✅        | Convex DB structure               |
+| Convex Auth setup         | ✅\*      | For user info (if widget uses it) |
+| Convex React/Client deps  | ✅        | For frontend hooks                |
+
+---
+
+**TL;DR:**
+
+- The UI package is just the frontend.
+- You must copy the backend files (`voting.ts`, `featureRequests.ts`, and schema) and deploy them.
+- Make sure your schema matches.
+- Set up Convex Auth if you want user info.
+
+If you want a checklist or a ready-to-copy template for a new app, just say the word!
+
+You nailed it! Here’s your checklist for new apps using your voting widget:
+
+---
+
+## **Voting Widget Integration Checklist**
+
+1. **Install the npm package and all dependencies**
+
+   - `npm install @andromedax684/voting-widget`
+   - Install any required peer dependencies (React, Convex, etc.)
+
+2. **Copy/Create Convex backend files**
+
+   - Add the correct `schema.ts` (with `features`, `votes`, and `featureRequests` tables + indexes)
+   - Add the voting/feature request mutations and queries (as in your last message)
+
+3. **Create a page/component to use the widget**
+
+   - Import your widget in a React page:
+     ```tsx
+     import VotingWidget from "@andromedax684/voting-widget";
+     // ...get user info...
+     <VotingWidget user={user} />;
+     ```
+   - Make sure you pass the correct user object if required
+
+4. **Deploy Convex functions**
+   - Run `npx convex dev` or `npx convex deploy` to push your backend code
+
+---
+
+**That’s it!**
+You’re ready to vote, request features, and bask in the glory of code reuse.
+If you want a copy-paste starter template, just say the word!
