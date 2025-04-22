@@ -203,7 +203,7 @@ You nailed it! Here’s your checklist for new apps using your voting widget:
 
 1. **Install the npm package and all dependencies**
 
-   - `npm install @andromedax684/voting-widget`
+   - `npm install git+https://github.com/AndromedaX684/voting-widget.git --force`
    - Install any required peer dependencies (React, Convex, etc.)
 
 2. **Copy/Create Convex backend files**

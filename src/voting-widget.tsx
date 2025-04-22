@@ -14,12 +14,13 @@ import { Feature, VotingResult } from "./types";
 
 interface VotingWidgetProps {
 	user: { id: string; name?: string; email?: string };
+	appId: string;
 }
 
 const TABS = ["All Features", "My Votes"];
 const STATUS_OPTIONS = ["PLANNED", "IN REVIEW", "FIXED"];
 
-const VotingWidget: React.FC<VotingWidgetProps> = ({ user }) => {
+const VotingWidget: React.FC<VotingWidgetProps> = ({ user, appId }) => {
 	const [search, setSearch] = useState("");
 	const [activeTab, setActiveTab] = useState(TABS[0]);
 	const [showRequestDialog, setShowRequestDialog] = useState(false);
@@ -109,7 +110,7 @@ const VotingWidget: React.FC<VotingWidgetProps> = ({ user }) => {
 		setRequestError(null);
 		try {
 			await submitFeatureRequest({
-				appId: "demo-app",
+				appId,
 				userId: user.id,
 				userInfo: { name: user.name, email: user.email },
 				message: requestText,
