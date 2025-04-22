@@ -2,8 +2,8 @@
   "name": "@andromedax684/voting-widget",
   "version": "1.0.1",
   "type": "module",
-  "main": "dist/voting-widget.js",
-  "types": "dist/voting-widget.d.ts",
+  "main": "src/voting-widget.tsx",
+  "types": "src/voting-widget.tsx",
   "repository": {
     "type": "git",
     "url": "https://github.com/AndromedaX684/voting-widget.git"
