@@ -64,34 +64,54 @@ _If you don't see a screenshot, it's because you haven't added one yet. Go flex 
 
 ## Publishing
 
-- This package is ready for npm and GitHub.
-- Peer dependencies are set for maximum compatibility.
-- Main entry: `dist/voting-widget.js`
-- Types: `dist/voting-widget.d.ts`
+Exactly! Here’s your workflow for future updates:
 
 ---
 
-## Contributing
+## 1. **Edit Your Code**
 
-PRs, issues, and feature requests are welcome!
-Want to add tests, improve accessibility, or make the widget even fancier? Open a PR or start a discussion.
+- Make your changes locally.
+
+## 2. **Commit and Push to GitHub**
+
+```bash
+git add .
+git commit -m "Describe your changes"
+git push
+```
+
+## 3. **Bump the Version**
+
+- Update the `version` field in your `package.json` (e.g., from `1.0.0` to `1.0.1`).
+  - You can do this manually, or with:
+    ```bash
+    npm version patch   # or minor/major as appropriate
+    ```
+
+## 4. **Build the Package**
+
+```bash
+npm run build
+```
+
+## 5. **Publish Again**
+
+```bash
+npm publish
+```
+
+- This will publish the new version to GitHub Packages.
 
 ---
 
-## License
+**TL;DR:**
 
-MIT © Henry Levo
+- Edit code → commit & push → bump version → build → publish.
 
----
+**Pro tip:**
+You must bump the version each time you publish, or npm will reject the publish.
 
-## FAQ
-
-**Q: Does it work with Next.js?**
-A: Yes, but you'll need to use the Convex client in a Client Component.
-
-**Q: Can I use my own design system?**
-A: Absolutely! Swap out the UI components for your own, or extend the widget as needed.
+You’re now a package pro! 🚀
+If you want a script to automate this, or want to set up GitHub Actions for auto-publishing, just ask!
 
 ---
-
-If you want a CONTRIBUTING.md, usage GIF, or more code examples, just say the word!
