@@ -1,12 +1,12 @@
 {
-  "name": "voting-widget",
+  "name": "@andromedax684/voting-widget",
   "version": "1.0.0",
   "type": "module",
   "main": "dist/voting-widget.js",
   "types": "dist/voting-widget.d.ts",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/henrylevo/voting-widget.git"
+    "url": "https://github.com/AndromedaX684/voting-widget.git"
   },
   "author": "Henry Levo",
   "license": "MIT",
@@ -49,5 +49,8 @@
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.26.1",
     "vite": "^6.3.1"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
   }
 }
