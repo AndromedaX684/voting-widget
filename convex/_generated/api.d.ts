@@ -13,7 +13,6 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
-import type * as featureRequests from "../featureRequests.js";
 import type * as voting from "../voting.js";
 
 /**
@@ -25,7 +24,6 @@ import type * as voting from "../voting.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
-  featureRequests: typeof featureRequests;
   voting: typeof voting;
 }>;
 export declare const api: FilterApi<

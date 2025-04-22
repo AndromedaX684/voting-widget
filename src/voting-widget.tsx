@@ -2,7 +2,12 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import confetti from "canvas-confetti";
-import { useMutation, useQuery } from "convex/react";
+import {
+	ConvexProvider,
+	ConvexReactClient,
+	useMutation,
+	useQuery,
+} from "convex/react";
 import { FilterIcon, PlusIcon } from "lucide-react";
 import React, { useMemo, useState } from "react";
 import { api } from "./../convex/_generated/api";
@@ -15,12 +20,13 @@ import { Feature, VotingResult } from "./types";
 interface VotingWidgetProps {
 	user: { id: string; name?: string; email?: string };
 	appId: string;
+	convexUrl?: string;
 }
 
 const TABS = ["All Features", "My Votes"];
 const STATUS_OPTIONS = ["PLANNED", "IN REVIEW", "FIXED"];
 
-const VotingWidget: React.FC<VotingWidgetProps> = ({ user, appId }) => {
+const VotingWidgetInner: React.FC<VotingWidgetProps> = ({ user, appId }) => {
 	const [search, setSearch] = useState("");
 	const [activeTab, setActiveTab] = useState(TABS[0]);
 	const [showRequestDialog, setShowRequestDialog] = useState(false);
@@ -192,6 +198,25 @@ const VotingWidget: React.FC<VotingWidgetProps> = ({ user, appId }) => {
 				</div>
 			)}
 		</div>
+	);
+};
+
+const VotingWidget: React.FC<VotingWidgetProps> = ({
+	user,
+	appId,
+	convexUrl,
+}) => {
+	const client = useMemo(
+		() =>
+			new ConvexReactClient(
+				convexUrl ?? "https://clever-anteater-797.convex.cloud"
+			),
+		[convexUrl]
+	);
+	return (
+		<ConvexProvider client={client}>
+			<VotingWidgetInner user={user} appId={appId} />
+		</ConvexProvider>
 	);
 };
 
