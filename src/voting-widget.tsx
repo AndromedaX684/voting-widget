@@ -6,16 +6,18 @@ import React, { useMemo, useState } from "react";
 import { api } from "./../convex/_generated/api";
 import FeatureList from "./FeatureList";
 import FilterPopover from "./FilterPopover";
-import { mockUser } from "./mock-user";
 import RequestFeatureDialog from "./RequestFeatureDialog";
-import { statusMap } from "./status-map";
 import Tabs from "./Tabs";
-import { Feature, VotingResult, mockFeatures } from "./types";
+import { Feature, VotingResult } from "./types";
+
+interface VotingWidgetProps {
+	user: { id: string; name?: string; email?: string };
+}
 
 const TABS = ["All Features", "My Votes"];
 const STATUS_OPTIONS = ["PLANNED", "IN REVIEW", "FIXED"];
 
-const VotingWidget: React.FC = () => {
+const VotingWidget: React.FC<VotingWidgetProps> = ({ user }) => {
 	const [search, setSearch] = useState("");
 	const [activeTab, setActiveTab] = useState(TABS[0]);
 	const [showRequestDialog, setShowRequestDialog] = useState(false);
@@ -29,21 +31,16 @@ const VotingWidget: React.FC = () => {
 
 	// Filtered results by search, tab, and status
 	const filteredResults = useMemo(() => {
-		// Use mock data if no results from backend
-		const data =
-			results && results.length > 0
-				? results
-				: mockFeatures.map((f) => ({ feature: f, votes: [], voteCount: 0 }));
-		let filtered = data;
+		if (!results) return [];
+		let filtered = results;
 		if (activeTab === "My Votes") {
 			filtered = filtered.filter((r: VotingResult) =>
-				r.votes.some((v) => v.userId === mockUser.id)
+				r.votes.some((v) => v.userId === user.id)
 			);
 		}
 		if (filterStatus) {
 			filtered = filtered.filter(
-				(r: VotingResult) =>
-					(statusMap[r.feature._id]?.status || "PLANNED") === filterStatus
+				(r: VotingResult) => (r.feature.status || "PLANNED") === filterStatus
 			);
 		}
 		return filtered.filter(
@@ -51,10 +48,10 @@ const VotingWidget: React.FC = () => {
 				r.feature.title.toLowerCase().includes(search.toLowerCase()) ||
 				r.feature.description.toLowerCase().includes(search.toLowerCase())
 		);
-	}, [results, search, activeTab, filterStatus]);
+	}, [results, search, activeTab, filterStatus, user.id]);
 
 	const hasVoted = (votes: VotingResult["votes"]) =>
-		votes.some((v) => v.userId === mockUser.id);
+		votes.some((v) => v.userId === user.id);
 
 	const handleVote = async (feature: Feature) => {
 		setLoadingVote(feature._id);
@@ -62,8 +59,8 @@ const VotingWidget: React.FC = () => {
 		try {
 			const res = await submitVote({
 				featureId: feature._id,
-				userId: mockUser.id,
-				userInfo: { name: mockUser.name, email: mockUser.email },
+				userId: user.id,
+				userInfo: { name: user.name, email: user.email },
 			});
 			if (!res.success) setError(res.message);
 		} catch (e) {
@@ -110,7 +107,6 @@ const VotingWidget: React.FC = () => {
 			{error && <div className="text-red-500 text-sm mb-2">{error}</div>}
 			<FeatureList
 				features={filteredResults}
-				statusMap={statusMap}
 				hasVoted={hasVoted}
 				loadingVote={loadingVote}
 				onVote={handleVote}
