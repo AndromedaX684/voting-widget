@@ -16,7 +16,12 @@ const FeatureList: React.FC<FeatureListProps> = ({
 	onVote,
 }) => {
 	if (features.length === 0) {
-		return <div className="text-gray-400 text-center">No features found.</div>;
+		return (
+			<div className="text-gray-400 text-center flex flex-col items-center justify-center gap-2 border p-6 rounded-lg">
+				<span>No features found.</span>{" "}
+				<span className="text-xs">Be the first to request a feature!</span>
+			</div>
+		);
 	}
 	return (
 		<div className="space-y-3">

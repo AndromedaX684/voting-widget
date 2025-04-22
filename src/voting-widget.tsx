@@ -1,5 +1,7 @@
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import confetti from "canvas-confetti";
 import { useMutation, useQuery } from "convex/react";
 import { FilterIcon, PlusIcon } from "lucide-react";
 import React, { useMemo, useState } from "react";
@@ -28,6 +30,12 @@ const VotingWidget: React.FC<VotingWidgetProps> = ({ user }) => {
 	const submitVote = useMutation(api.voting.submitVote);
 	const [loadingVote, setLoadingVote] = useState<string | null>(null);
 	const [error, setError] = useState<string | null>(null);
+	const submitFeatureRequest = useMutation(
+		api.featureRequests.submitFeatureRequest
+	);
+	const [requestLoading, setRequestLoading] = useState(false);
+	const [requestError, setRequestError] = useState<string | null>(null);
+	const [showThankYou, setShowThankYou] = useState(false);
 
 	// Filtered results by search, tab, and status
 	const filteredResults = useMemo(() => {
@@ -70,6 +78,56 @@ const VotingWidget: React.FC<VotingWidgetProps> = ({ user }) => {
 		}
 	};
 
+	const triggerConfetti = () => {
+		const defaults = {
+			spread: 360,
+			ticks: 50,
+			gravity: 0,
+			decay: 0.94,
+			startVelocity: 30,
+			colors: ["#FFE400", "#FFBD00", "#E89400", "#FFCA6C", "#FDFFB8"],
+		};
+		const shoot = () => {
+			confetti({
+				...defaults,
+				particleCount: 40,
+				scalar: 1.2,
+				shapes: ["star"],
+			});
+			confetti({
+				...defaults,
+				particleCount: 10,
+				scalar: 0.75,
+				shapes: ["circle"],
+			});
+		};
+		setTimeout(shoot, 0);
+		setTimeout(shoot, 100);
+		setTimeout(shoot, 200);
+	};
+
+	const handleRequestSubmit = async () => {
+		setRequestLoading(true);
+		setRequestError(null);
+		try {
+			await submitFeatureRequest({
+				appId: "demo-app",
+				userId: user.id,
+				userInfo: { name: user.name, email: user.email },
+				message: requestText,
+			});
+			setShowRequestDialog(false);
+			setRequestText("");
+			setShowThankYou(true);
+			triggerConfetti();
+			setTimeout(() => setShowThankYou(false), 2000);
+		} catch (e) {
+			setRequestError("Failed to submit request. Try again.");
+		} finally {
+			setRequestLoading(false);
+		}
+	};
+
 	return (
 		<div className="w-full max-w-lg mx-auto mt-12">
 			<div className="flex items-center justify-between mb-4">
@@ -82,7 +140,7 @@ const VotingWidget: React.FC<VotingWidgetProps> = ({ user }) => {
 						setFilterStatus={setFilterStatus}
 						statusOptions={STATUS_OPTIONS}
 					>
-						<Button size="sm" variant="outline">
+						<Button size="sm">
 							<FilterIcon className="w-4 h-4" />
 						</Button>
 					</FilterPopover>
@@ -97,7 +155,9 @@ const VotingWidget: React.FC<VotingWidgetProps> = ({ user }) => {
 					</Button>
 				</div>
 			</div>
-			<Tabs tabs={TABS} activeTab={activeTab} setActiveTab={setActiveTab} />
+			<div className="mb-2">
+				<Tabs tabs={TABS} activeTab={activeTab} setActiveTab={setActiveTab} />
+			</div>
 			<Input
 				placeholder="Search using keywords"
 				value={search}
@@ -119,7 +179,27 @@ const VotingWidget: React.FC<VotingWidgetProps> = ({ user }) => {
 				onOpenChange={setShowRequestDialog}
 				requestText={requestText}
 				setRequestText={setRequestText}
+				onSubmit={handleRequestSubmit}
+				loading={requestLoading}
+				error={requestError}
 			/>
+			{showThankYou && (
+				<div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
+					<Card
+						className="font-bold text-2xl text-center shadow-lg p-12"
+						style={{
+							borderImage:
+								"linear-gradient(90deg, #FFD700, #FFFACD, #FFD700) 1",
+							boxShadow: "0 0 24px 4px #FFD70099",
+							background: "rgba(255,255,255)",
+						}}
+					>
+						<span className="bg-gradient-to-r from-yellow-400 via-yellow-200 to-yellow-400 bg-clip-text text-transparent drop-shadow-lg">
+							Thank you for your request!
+						</span>
+					</Card>
+				</div>
+			)}
 		</div>
 	);
 };

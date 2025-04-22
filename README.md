@@ -24,61 +24,33 @@ _If you don't see a screenshot, it's because you haven't added one yet. Go flex 
 
 ---
 
-## Installation
+## Step-by-Step Install & Setup
 
-```bash
-npm install voting-widget
-# or
-yarn add voting-widget
-```
+### **Add the Voting Widget**
 
-> **Peer dependencies:**
-> You must have `react`, `convex`, `@radix-ui/react-*`, and `tailwindcss` v4+ installed in your project.
+- Import and use the widget in your app:
 
----
+  ```tsx
+  import VotingWidget from "voting-widget";
 
-## Usage
+  function MyPage() {
+  	return (
+  		<VotingWidget
+  			user={{ id: "user-id", name: "Name", email: "email@example.com" }}
+  			// Optionally, pass a unique appId for multi-app separation
+  			appId="my-unique-app-id"
+  		/>
+  	);
+  }
+  ```
 
-1. **Set up Convex**
+- **user**: Pass your authenticated user object.
+- **appId**: (Recommended) Pass a unique string to separate data per app.
 
-   - Add the schema and voting logic from `convex/schema.ts` and `convex/voting.ts` to your Convex project.
-   - Run `npx convex push` to sync schema.
+### **Customize (Optional)**
 
-2. **Wrap your app with ConvexProvider**
-
-```tsx
-import { ConvexProvider, ConvexReactClient } from "convex/react";
-const convex = new ConvexReactClient(import.meta.env.VITE_CONVEX_URL);
-
-<ConvexProvider client={convex}>
-	<App />
-</ConvexProvider>;
-```
-
-3. **Add the Voting Widget**
-
-```tsx
-import VotingWidget from "voting-widget";
-
-function MyPage() {
-	return <VotingWidget />;
-}
-```
-
-4. **Style with Tailwind & Shadcn UI**
-   - Make sure Tailwind v4 is set up (no config file needed!).
-   - Import your Tailwind CSS in your main entry (e.g., `import "./index.css"`).
-
----
-
-## Customization
-
-- **Feature Statuses:**
-  Edit `statusMap` or extend the schema to add more statuses/types.
-- **User Info:**
-  Replace the `mockUser` logic with your actual user authentication.
-- **Feature Requests:**
-  The request dialog is a stub—hook it up to your backend or Convex mutation for real submissions.
+- The widget will inherit your Tailwind theme and Shadcn UI styles.
+- You can override styles or extend the widget as needed.
 
 ---
 
