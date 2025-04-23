@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { ChevronUp } from "lucide-react";
 import React from "react";
+import { useSnackbar } from "./components/snackbar-context";
 import { Feature, Vote } from "./types";
 
 interface FeatureCardProps {
@@ -33,14 +34,24 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
 	onVote,
 }) => {
 	const color = statusColor(status);
+	const { snackbar } = useSnackbar();
+
+	const handleVoteClick = () => {
+		if (hasVoted) {
+			snackbar.warning("You already voted for this feature.");
+			return;
+		}
+		onVote(feature);
+	};
+
 	return (
 		<div className="flex flex-row items-center p-3 gap-3 rounded-xl shadow-sm border">
 			{/* Upvote */}
 			<div className="flex flex-col items-center mx-2">
 				<button
-					className={`flex flex-col items-center justify-center w-12 h-12 rounded-md border border-border hover:border-primary hover:bg-accent shadow-md  ${hasVoted ? "text-primary" : ""}`}
-					onClick={() => onVote(feature)}
-					disabled={hasVoted || loadingVote}
+					className={`flex flex-col items-center justify-center w-12 h-12 rounded-md border border-border hover:border-primary hover:bg-accent shadow-md  ${hasVoted ? "text-primary bg-accent" : ""}`}
+					onClick={handleVoteClick}
+					disabled={loadingVote}
 				>
 					<ChevronUp className="w-4 h-4" />
 					<span className="font-semibold text-primary text-sm">

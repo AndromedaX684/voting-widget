@@ -33,7 +33,7 @@ const VotingWidgetInner: React.FC<VotingWidgetProps> = ({ user, appId }) => {
 	const [requestText, setRequestText] = useState("");
 	const [showFilter, setShowFilter] = useState(false);
 	const [filterStatus, setFilterStatus] = useState<string | null>(null);
-	const results = useQuery(api.voting.getResults, {});
+	const results = useQuery(api.voting.getResults, { appId });
 	const submitVote = useMutation(api.voting.submitVote);
 	const [loadingVote, setLoadingVote] = useState<string | null>(null);
 	const [error, setError] = useState<string | null>(null);
@@ -62,6 +62,8 @@ const VotingWidgetInner: React.FC<VotingWidgetProps> = ({ user, appId }) => {
 				r.feature.description.toLowerCase().includes(search.toLowerCase())
 		);
 	}, [results, search, activeTab, filterStatus, user.id]);
+
+	console.log("filteredResults in widget:", filteredResults);
 
 	const hasVoted = (votes: VotingResult["votes"]) =>
 		votes.some((v) => v.userId === user.id);
@@ -176,7 +178,7 @@ const VotingWidgetInner: React.FC<VotingWidgetProps> = ({ user, appId }) => {
 				loadingVote={loadingVote}
 				onVote={handleVote}
 			/>
-			<div className="text-xs text-gray-400 text-center mt-6">
+			<div className="text-xs text-gray-400 text-center mt-8">
 				Powered by Love ❤️
 			</div>
 			<RequestFeatureDialog

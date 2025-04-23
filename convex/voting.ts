@@ -43,7 +43,8 @@ export const submitVote = mutation({
 
 // --- Get voting results ---
 export const getResults = query({
-	args: {},
+	// Widget must pass appId to only show relevant features
+	args: { appId: v.string() },
 	returns: v.array(
 		v.object({
 			feature: v.object({
@@ -66,8 +67,12 @@ export const getResults = query({
 			voteCount: v.number(),
 		})
 	),
-	handler: async (ctx) => {
-		const features = await ctx.db.query("features").collect();
+	handler: async (ctx, args) => {
+		if (!args.appId) throw new Error("appId is required");
+		const features = await ctx.db
+			.query("features")
+			.withIndex("by_appId", (q) => q.eq("appId", args.appId))
+			.collect();
 		const results = [];
 		for (const feature of features) {
 			const votes = await ctx.db
