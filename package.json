@@ -1,6 +1,6 @@
 {
   "name": "@andromedax684/voting-widget",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "type": "module",
   "main": "src/voting-widget.tsx",
   "types": "src/voting-widget.tsx",
@@ -34,6 +34,8 @@
     "clsx": "^2.1.1",
     "framer-motion": "^12.7.4",
     "lucide-react": "^0.503.0",
+    "next-themes": "^0.4.6",
+    "sonner": "^2.0.3",
     "tailwind-merge": "^3.2.0",
     "tw-animate-css": "^1.2.8"
   },

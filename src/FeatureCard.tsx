@@ -2,7 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { ChevronUp } from "lucide-react";
 import React from "react";
-import { useSnackbar } from "./components/snackbar-context";
+import { toast } from "sonner";
 import { Feature, Vote } from "./types";
 
 interface FeatureCardProps {
@@ -34,11 +34,10 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
 	onVote,
 }) => {
 	const color = statusColor(status);
-	const { snackbar } = useSnackbar();
 
 	const handleVoteClick = () => {
 		if (hasVoted) {
-			snackbar.warning("You already voted for this feature.");
+			toast.warning("You already voted for this feature.");
 			return;
 		}
 		onVote(feature);
